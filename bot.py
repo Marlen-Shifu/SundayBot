@@ -132,7 +132,7 @@ async def submit_cheque_number(mes: types.Message, state: FSMContext):
     await mes.answer("Отправьте номер чека( что это и как его отправить можете посмотреть в Инструкции)", reply_markup=k)
 
 
-@dp.message_handler(state=AddRecord.cheque_number)
+@dp.message_handler(state=AddRecord.cheque_number, content_types='*')
 async def submit_cheque_photo(mes: types.Message, state: FSMContext):
 
     if mes.content_type == 'text':
@@ -147,7 +147,7 @@ async def submit_cheque_photo(mes: types.Message, state: FSMContext):
         await mes.answer("Отправьте текстовое сообщение с номером чека.")
 
 
-@dp.message_handler(state=AddRecord.cheque_photo, content_types=['photo', 'document'])
+@dp.message_handler(state=AddRecord.cheque_photo, content_types='*')
 async def submit_confirm(mes: types.Message, state: FSMContext):
 
     if len(mes.photo) != 0:
