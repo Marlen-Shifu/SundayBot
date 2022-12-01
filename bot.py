@@ -210,7 +210,7 @@ async def success_submit(mes: types.Message, state: FSMContext):
         k = types.InlineKeyboardMarkup()
         k.add(types.InlineKeyboardButton("Подписать на Instagram Sunday Coffee", url='https://instagram.com/sundaycoffee.kz'))
 
-        await mes.answer(f"""Ваш чек успешно зарегистрирован.
+        await mes.answer(f"""Ваш чек успешно зарегистрирован 😍
 
 Розыгрыш состоится:
 🗓️ 30 декабря
@@ -219,7 +219,7 @@ async def success_submit(mes: types.Message, state: FSMContext):
 
 Подпишитесь на нас, чтобы узнать результаты.
 
-Может быть именно вы станете обладателем нового iPhone 14.
+Помните, чем больше чеков, тем больше шансов выиграть iPhone 14.
 
 Желаем вам удачи!""", reply_markup=k, parse_mode="HTML")
 
