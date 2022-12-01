@@ -14,5 +14,6 @@ COPY . /app
 #CMD instruction should be used to run the software
 #contained by your image, along with any arguments.
 
+RUN pip install -r requirements.txt
 
 CMD [ "python", "bot.py"]
