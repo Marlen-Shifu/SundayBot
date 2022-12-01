@@ -32,30 +32,50 @@ headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleW
 
 
 main_menu = types.ReplyKeyboardMarkup(resize_keyboard=True)
-main_menu.add(types.KeyboardButton("Submit application"))
-main_menu.add(types.KeyboardButton("Technical support"))
+main_menu.add(types.KeyboardButton("Оставить заявку"))
+main_menu.add(types.KeyboardButton("Тех. поддержка"))
 
 
-@dp.message_handler(commands=['start'])
-async def start(mes: types.Message):
+@dp.message_handler(commands=['start'], state='*')
+async def start(mes: types.Message, state: FSMContext):
+
+    try:
+        await state.finish()
+    except:
+        pass
+
     add_user(mes.from_user.id, mes.from_user.username)
 
-    await mes.answer("Hello", reply_markup=main_menu)
+    await mes.answer("Здравствуйте!", reply_markup=main_menu)
 
 
-@dp.message_handler(lambda m: m.text == "Technical support")
+@dp.message_handler(lambda mes: mes.text == 'Отмена', state='*')
+async def start(mes: types.Message, state: FSMContext):
+
+    try:
+        await state.finish()
+    except:
+        pass
+
+    await mes.answer("Главное меню", reply_markup=main_menu)
+
+
+@dp.message_handler(lambda m: m.text == "Тех. поддержка")
 async def tech_support(mes: types.Message):
 
-    await mes.answer("If You have any questions about draw rules or other questions related to it You can ask it from 8-800-5353535")
-    await mes.answer("If You have some technical problems or questions about it ask it from @Marlen45")
+    await mes.answer("Если у Вас есть вопросы по поводу конкурса, его правилам или других вещем связанных с конкурсом, то сообщите по номеру 8-800-535-35-35")
+    await mes.answer("Если у Вас есть вопросы по боту, или какие-либо технические проблемы, то сообщите @Marlen45")
 
 
-@dp.message_handler(lambda m: m.text == "Submit application")
+@dp.message_handler(lambda m: m.text == "Оставить заявку")
 async def submit_name(mes: types.Message):
 
     await AddRecord.name.set()
 
-    await mes.answer("Enter your name", reply_markup=types.ReplyKeyboardRemove())
+    k = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    k.add(types.KeyboardButton("Отмена"))
+
+    await mes.answer("Отправьте Ваше имя", reply_markup=k)
 
 
 @dp.message_handler(state=AddRecord.name)
@@ -66,9 +86,10 @@ async def submit_phone(mes: types.Message, state: FSMContext):
     await AddRecord.phone.set()
 
     k = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    k.add(types.KeyboardButton("Send contact", request_contact=True))
+    k.add(types.KeyboardButton("Отправить контакт", request_contact=True))
+    k.add(types.KeyboardButton("Отмена"))
 
-    await mes.answer("Enter or send your contact phone", reply_markup=k)
+    await mes.answer("Отправьте ваш номер телефона или нажмите на кнопку \"Отправить контакт\"", reply_markup=k)
 
 
 @dp.message_handler(state=AddRecord.phone, content_types=['text', 'contact'])
@@ -77,7 +98,7 @@ async def submit_cheque_number(mes: types.Message, state: FSMContext):
         try:
             num = phonenumbers.parse(mes.contact.phone_number, "KZ")
         except:
-            await mes.answer('Invalid number or format')
+            await mes.answer('Неверный номер или формат')
             return
 
 
@@ -85,14 +106,14 @@ async def submit_cheque_number(mes: types.Message, state: FSMContext):
 
             await state.update_data(phone = mes.contact.phone_number)
         else:
-            await mes.answer('Invalid number or format')
+            await mes.answer('Неверный номер или формат')
             return
 
     else:
         try:
             num = phonenumbers.parse(mes.text, "KZ")
         except:
-            await mes.answer('Invalid number or format')
+            await mes.answer('Неверный номер или формат')
             return
 
         if (phonenumbers.is_valid_number(num)):
@@ -100,22 +121,30 @@ async def submit_cheque_number(mes: types.Message, state: FSMContext):
             await state.update_data(phone=mes.text)
 
         else:
-            await mes.answer('Invalid number or format')
+            await mes.answer('Неверный номер или формат')
             return
 
     await AddRecord.cheque_number.set()
 
-    await mes.answer("Enter the cheque number( what is it and how to send it you can see from instruction)", reply_markup=types.ReplyKeyboardRemove())
+    k = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    k.add(types.KeyboardButton("Отмена"))
+
+    await mes.answer("Отправьте номер чека( что это и как его отправить можете посмотреть в Инструкции)", reply_markup=k)
 
 
 @dp.message_handler(state=AddRecord.cheque_number)
 async def submit_cheque_photo(mes: types.Message, state: FSMContext):
 
-    await state.update_data(cheque_number=mes.text)
+    if mes.content_type == 'text':
 
-    await AddRecord.cheque_photo.set()
+        await state.update_data(cheque_number=mes.text)
 
-    await mes.answer("Send photo or file")
+        await AddRecord.cheque_photo.set()
+
+        await mes.answer("Отправьте фото или файл")
+
+    else:
+        await mes.answer("Отправьте текстовое сообщение с номером чека.")
 
 
 @dp.message_handler(state=AddRecord.cheque_photo, content_types=['photo', 'document'])
@@ -131,7 +160,7 @@ async def submit_confirm(mes: types.Message, state: FSMContext):
         await state.update_data(cheque_photo=mes.document.file_id)
 
     else:
-        await mes.answer("Send photo or file")
+        await mes.answer("Отправьте фото или файл")
         return
 
     await AddRecord.confirm.set()
@@ -141,34 +170,31 @@ async def submit_confirm(mes: types.Message, state: FSMContext):
 
     k = types.ReplyKeyboardMarkup(resize_keyboard=True)
 
-    k.add(types.KeyboardButton("Yes"))
-    k.add(types.KeyboardButton("No"))
+    k.add(types.KeyboardButton("Да"))
+    k.add(types.KeyboardButton("Нет"))
 
-    await mes.answer(f"Do you confirm ?\nName: {data.get('name')}\nPhone: {data.get('phone')}\nCheque Number: {data.get('cheque_number')}", reply_markup=k)
+    await mes.answer(f"Подтвердите ваши данные ?\nИмя: {data.get('name')}\nНомер телефона: {data.get('phone')}\nНомер чека: {data.get('cheque_number')}", reply_markup=k)
 
 
 @dp.message_handler(state=AddRecord.confirm)
 async def success_submit(mes: types.Message, state: FSMContext):
     answer = mes.text
 
-    if answer == 'Yes':
+    if answer == 'Да':
 
         data = await state.get_data()
 
         add_record(**data)
 
-        await mes.answer(f"Your application is successfully accepted", reply_markup=main_menu)
+        await mes.answer(f"Ваша заявка успешно принята! Ожидайте результата.", reply_markup=main_menu)
 
-    elif answer == 'No':
+    elif answer == 'Нет':
 
-        k = types.ReplyKeyboardMarkup(resize_keyboard=True)
-        k.add(types.KeyboardButton("Submit application"))
-
-        await mes.answer('Ok. You can resubmit Your application', reply_markup=main_menu)
+        await mes.answer('Создание заявка отменено. Вы можете оставить заявку нажав по кнопке \"Оставить заявку\"', reply_markup=main_menu)
 
     else:
 
-        await mes.answer("Please choose Yes or No.")
+        await mes.answer("Пожалуйста выберите Да или Нет")
         return
 
     await state.finish()
