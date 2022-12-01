@@ -70,7 +70,7 @@ async def tech_support(mes: types.Message):
     await mes.answer("Если у Вас есть вопросы по боту, или какие-либо технические проблемы, то сообщите @Marlen45")
 
 
-@dp.message_handler(lambda m: m.text == "Оставить заявку")
+@dp.message_handler(lambda m: m.text == "Зарегистрировать чек")
 async def submit_name(mes: types.Message):
 
     await AddRecord.name.set()
