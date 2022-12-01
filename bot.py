@@ -210,7 +210,7 @@ async def success_submit(mes: types.Message, state: FSMContext):
 
 Может быть именно вы станете обладателем нового iPhone 14.
 
-Желаем вам удачи!""", reply_markup=k)
+Желаем вам удачи!""", reply_markup=k, parse_mode="HTML")
 
         await mes.answer("Главное меню", reply_markup=main_menu)
 
