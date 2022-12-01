@@ -32,7 +32,7 @@ headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleW
 
 
 main_menu = types.ReplyKeyboardMarkup(resize_keyboard=True)
-main_menu.add(types.KeyboardButton("Оставить заявку"))
+main_menu.add(types.KeyboardButton("Зарегистрировать чек"))
 main_menu.add(types.KeyboardButton("Тех. поддержка"))
 
 
@@ -46,7 +46,10 @@ async def start(mes: types.Message, state: FSMContext):
 
     add_user(mes.from_user.id, mes.from_user.username)
 
-    await mes.answer("Здравствуйте!", reply_markup=main_menu)
+    await mes.answer("""Здравствуйте!
+Вас приветствует чат-бот Sunday Coffee.
+
+Чтобы принять участие в розыгрыше iPhone 14 нажмите на кнопку \"Зарегистрировать чек\"""", reply_markup=main_menu)
 
 
 @dp.message_handler(lambda mes: mes.text == 'Отмена', state='*')
@@ -75,7 +78,7 @@ async def submit_name(mes: types.Message):
     k = types.ReplyKeyboardMarkup(resize_keyboard=True)
     k.add(types.KeyboardButton("Отмена"))
 
-    await mes.answer("Отправьте Ваше имя", reply_markup=k)
+    await mes.answer("Напишите Ваше имя ", reply_markup=k)
 
 
 @dp.message_handler(state=AddRecord.name)
@@ -89,7 +92,7 @@ async def submit_phone(mes: types.Message, state: FSMContext):
     k.add(types.KeyboardButton("Отправить контакт", request_contact=True))
     k.add(types.KeyboardButton("Отмена"))
 
-    await mes.answer("Отправьте ваш номер телефона или нажмите на кнопку \"Отправить контакт\"", reply_markup=k)
+    await mes.answer("Напишите Ваш номер телефона или нажмите \"Отправить контакт\"", reply_markup=k)
 
 
 @dp.message_handler(state=AddRecord.phone, content_types=['text', 'contact'])
@@ -129,7 +132,7 @@ async def submit_cheque_number(mes: types.Message, state: FSMContext):
     k = types.ReplyKeyboardMarkup(resize_keyboard=True)
     k.add(types.KeyboardButton("Отмена"))
 
-    await mes.answer("Отправьте номер чека( что это и как его отправить можете посмотреть в Инструкции)", reply_markup=k)
+    await mes.answer("Отлично! Осталось совсем немного. Теперь отправьте номер чека", reply_markup=k)
 
 
 @dp.message_handler(state=AddRecord.cheque_number, content_types=types.ContentTypes.all())
@@ -141,7 +144,10 @@ async def submit_cheque_photo(mes: types.Message, state: FSMContext):
 
         await AddRecord.cheque_photo.set()
 
-        await mes.answer("Отправьте фото или файл")
+        await mes.answer("""И последний шаг
+Отправьте фото чека.""")
+
+        await mes.answer("Внимание! Убедитесь, что фото сделано четко, как на примере.")
 
     else:
         await mes.answer("Отправьте текстовое сообщение с номером чека.")
@@ -173,7 +179,7 @@ async def submit_confirm(mes: types.Message, state: FSMContext):
     k.add(types.KeyboardButton("Да"))
     k.add(types.KeyboardButton("Нет"))
 
-    await mes.answer(f"Подтвердите ваши данные ?\nИмя: {data.get('name')}\nНомер телефона: {data.get('phone')}\nНомер чека: {data.get('cheque_number')}", reply_markup=k)
+    await mes.answer(f"Подтвердите ваши данные:\n   Имя: {data.get('name')}\n   Номер телефона: {data.get('phone')}\n   Номер чека: {data.get('cheque_number')}", reply_markup=k)
 
 
 @dp.message_handler(state=AddRecord.confirm)
@@ -186,11 +192,27 @@ async def success_submit(mes: types.Message, state: FSMContext):
 
         add_record(**data)
 
-        await mes.answer(f"Ваша заявка успешно принята! Ожидайте результата.", reply_markup=main_menu)
+        k = types.InlineKeyboardMarkup()
+        k.add(types.InlineKeyboardButton("Подписать на Instagram Sunday Coffee", url='https://instagram.com/sundaycoffee.kz'))
+
+        await mes.answer(f"""Ваш чек успешно зарегистрирован.
+
+Розыгрыш состоится:
+🗓️ 30 декабря
+🕖 19.00 
+в прямом эфире на нашей странице в <a href="https://instagram.com/sundaycoffee.kz">Инстаграм</a>.
+
+Подпишитесь на нас, чтобы узнать результаты.
+
+Может быть именно вы станете обладателем нового iPhone 14.
+
+Желаем вам удачи!""", reply_markup=k)
+
+        await mes.answer("Главное меню", reply_markup=main_menu)
 
     elif answer == 'Нет':
 
-        await mes.answer('Создание заявка отменено. Вы можете оставить заявку нажав по кнопке \"Оставить заявку\"', reply_markup=main_menu)
+        await mes.answer('Создание заявка отменено. Вы можете оставить заявку нажав по кнопке \"Зарегестрировать чек\"', reply_markup=main_menu)
 
     else:
 
