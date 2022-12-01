@@ -3,6 +3,7 @@ import json
 
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram import Bot, Dispatcher, executor
+from aiogram.utils.markdown import hlink
 
 from aiogram import types
 
@@ -192,6 +193,9 @@ async def success_submit(mes: types.Message, state: FSMContext):
 
         add_record(**data)
 
+
+        link = hlink('Инстаграм', 'https://instagram.com/sundaycoffee.kz')
+
         k = types.InlineKeyboardMarkup()
         k.add(types.InlineKeyboardButton("Подписать на Instagram Sunday Coffee", url='https://instagram.com/sundaycoffee.kz'))
 
@@ -200,7 +204,7 @@ async def success_submit(mes: types.Message, state: FSMContext):
 Розыгрыш состоится:
 🗓️ 30 декабря
 🕖 19.00 
-в прямом эфире на нашей странице в <a href="https://instagram.com/sundaycoffee.kz">Инстаграм</a>.
+в прямом эфире на нашей странице в {link}.
 
 Подпишитесь на нас, чтобы узнать результаты.
 
