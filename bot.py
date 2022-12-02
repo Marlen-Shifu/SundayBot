@@ -23,6 +23,8 @@ import pandas as pd
 
 import requests
 
+import threading
+
 
 logging.basicConfig(level=logging.INFO)
 
@@ -240,11 +242,22 @@ async def success_submit(mes: types.Message, state: FSMContext):
 
 @dp.message_handler(commands=['report'])
 async def report(mes: types.Message):
-    today = datetime.datetime.today().date()
-
-    writer = pd.ExcelWriter(f'{today}_report.xlsx', engine='xlsxwriter')
-
     records = get_all_records()
+    today = datetime.datetime.today().date()
+    logging.info(datetime.datetime.today())
+
+    t = threading.Thread(target=write_report, args=(today, records))
+
+    t.start()
+
+    t.join()
+
+    with open(f'{today}_report.xlsx', 'rb') as file:
+        await mes.answer_document(file)
+
+
+def write_report(date, records):
+    writer = pd.ExcelWriter(f'{date}_report.xlsx', engine='xlsxwriter')
 
     names = []
     phones = []
@@ -266,15 +279,11 @@ async def report(mes: types.Message):
 
         cheque_photos_urls.append(photo_url)
 
-
     df = pd.DataFrame({'Имя': names, 'Телефон': phones, 'Номер чека': cheque_numbers, 'URL фото': cheque_photos_urls})
 
     df.to_excel(writer, sheet_name='Заявки', index=False)
 
     writer.save()
-
-    with open(f'{today}_report.xlsx', 'rb') as file:
-        await mes.answer_document(file)
 
 if __name__ == "__main__":
     executor.start_polling(dp)
