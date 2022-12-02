@@ -243,20 +243,18 @@ async def success_submit(mes: types.Message, state: FSMContext):
 @dp.message_handler(commands=['report'])
 async def report(mes: types.Message):
     records = get_all_records()
-    today = datetime.datetime.today().date()
-    logging.info(datetime.datetime.today())
+    today = datetime.datetime.today() + datetime.timedelta(hours=6)
+    today = today.date()
 
-    t = threading.Thread(target=write_report, args=(today, records))
+    t = threading.Thread(target=write_report, args=(today, records, mes))
 
     t.start()
-
-    t.join()
 
     with open(f'{today}_report.xlsx', 'rb') as file:
         await mes.answer_document(file)
 
 
-def write_report(date, records):
+async def write_report(date, records, mes):
     writer = pd.ExcelWriter(f'{date}_report.xlsx', engine='xlsxwriter')
 
     names = []
@@ -284,6 +282,9 @@ def write_report(date, records):
     df.to_excel(writer, sheet_name='Заявки', index=False)
 
     writer.save()
+
+    # with open(f'{date}_report.xlsx', 'rb') as file:
+    #     await mes.answer_document(file)
 
 if __name__ == "__main__":
     executor.start_polling(dp)
