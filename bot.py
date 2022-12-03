@@ -255,7 +255,7 @@ async def report(mes: types.Message):
     #     await mes.answer_document(file)
 
 
-async def write_report(date, records, mes):
+def write_report(date, records, mes):
     writer = pd.ExcelWriter(f'{date}_report.xlsx', engine='xlsxwriter')
 
     names = []
