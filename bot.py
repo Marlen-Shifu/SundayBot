@@ -251,8 +251,10 @@ async def report(mes: types.Message):
 
     t.start()
 
-    # with open(f'{today}_report.xlsx', 'rb') as file:
-    #     await mes.answer_document(file)
+    t.join()
+
+    with open(f'{today}_report.xlsx', 'rb') as file:
+        await mes.answer_document(file)
 
 
 def write_report(date, records, bot, mes):
@@ -284,10 +286,10 @@ def write_report(date, records, bot, mes):
 
     writer.save()
 
-    with open(f'{date}_report.xlsx', 'rb') as file:
-        loop = asyncio.new_event_loop()
-
-        loop.run_until_complete(bot.send_document(mes.from_user.id, file))
+    # with open(f'{date}_report.xlsx', 'rb') as file:
+    #     loop = asyncio.new_event_loop()
+    #
+    #     loop.run_until_complete(bot.send_document(mes.from_user.id, file))
 
         # await mes.answer_document(file)
 
