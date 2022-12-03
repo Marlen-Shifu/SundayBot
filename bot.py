@@ -1,3 +1,4 @@
+import asyncio
 import datetime
 import json
 
@@ -250,8 +251,8 @@ async def report(mes: types.Message):
 
     t.start()
 
-    with open(f'{today}_report.xlsx', 'rb') as file:
-        await mes.answer_document(file)
+    # with open(f'{today}_report.xlsx', 'rb') as file:
+    #     await mes.answer_document(file)
 
 
 async def write_report(date, records, mes):
@@ -283,8 +284,12 @@ async def write_report(date, records, mes):
 
     writer.save()
 
-    # with open(f'{date}_report.xlsx', 'rb') as file:
-    #     await mes.answer_document(file)
+    with open(f'{date}_report.xlsx', 'rb') as file:
+        loop = asyncio.new_event_loop()
+
+        loop.run_until_complete(mes.answer_document(file))
+
+        # await mes.answer_document(file)
 
 if __name__ == "__main__":
     executor.start_polling(dp)
