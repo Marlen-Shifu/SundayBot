@@ -247,7 +247,7 @@ async def report(mes: types.Message):
     today = datetime.datetime.today() + datetime.timedelta(hours=6)
     today = today.date()
 
-    t = threading.Thread(target=write_report, args=(today, records, mes))
+    t = threading.Thread(target=write_report, args=(today, records, bot, mes))
 
     t.start()
 
@@ -255,7 +255,7 @@ async def report(mes: types.Message):
     #     await mes.answer_document(file)
 
 
-def write_report(date, records, mes):
+def write_report(date, records, bot, mes):
     writer = pd.ExcelWriter(f'{date}_report.xlsx', engine='xlsxwriter')
 
     names = []
@@ -287,7 +287,7 @@ def write_report(date, records, mes):
     with open(f'{date}_report.xlsx', 'rb') as file:
         loop = asyncio.new_event_loop()
 
-        loop.run_until_complete(mes.answer_document(file))
+        loop.run_until_complete(bot.send_document(mes.from_user.id, file))
 
         # await mes.answer_document(file)
 
