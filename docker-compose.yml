@@ -4,6 +4,8 @@ services:
    bot:
        build: .
        command: python bot.py
+       depends_on:
+         - database
 
    database:
      image: postgres:latest
