@@ -328,7 +328,7 @@ async def delete_cheque(mes: types.Message):
     await mes.answer(msg, reply_markup=k)
 
 
-@dp.callback_query_handlers(state=DeleteRecordState.confirm)
+@dp.callback_query_handler(state=DeleteRecordState.confirm)
 async def delete_cheque_confirm(call: types.CallbackQuery, state: FSMContext):
     if call.data.startswith('delete'):
 
