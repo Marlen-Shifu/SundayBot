@@ -314,7 +314,7 @@ async def delete_cheque(mes: types.Message):
 
     state = Dispatcher.get_current().current_state()
 
-    await state.update_data(id = record_id)
+    await state.update_data(record_id = record_id)
 
     k = types.ReplyKeyboardMarkup(resize_keyboard=True)
     k.add(types.KeyboardButton('Да'), types.KeyboardButton('Нет'))
@@ -341,7 +341,7 @@ async def delete_cheque_confirm(mes: types.Message, state: FSMContext):
 
         data = await state.get_data()
 
-        res = delete_record(data.get('id'))
+        res = delete_record(data.get('record_id'))
 
         if res == 'yes':
             await mes.answer("Чек успешно удален", reply_markup=main_menu)
