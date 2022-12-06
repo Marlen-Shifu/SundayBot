@@ -314,7 +314,6 @@ async def delete_cheque(mes: types.Message):
 
     state = Dispatcher.get_current().current_state()
 
-    await state.update_data(record_id = record_id)
 
     k = types.ReplyKeyboardMarkup(resize_keyboard=True)
     k.add(types.KeyboardButton('Да'), types.KeyboardButton('Нет'))
@@ -330,6 +329,7 @@ async def delete_cheque(mes: types.Message):
     msg += f"\n         Номер чека: {record.cheque_number}"
     msg += f"\n         Фото чека: /photo_{record.id}"
 
+    await state.update_data(record_id = record_id)
     await mes.answer(msg, reply_markup=k)
 
 
