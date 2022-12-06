@@ -329,7 +329,7 @@ async def delete_cheque(mes: types.Message):
     msg += f"\n         Имя: {record.name}"
     msg += f"\n         Телефон: {record.phone}"
     msg += f"\n         Номер чека: {record.cheque_number}"
-    msg += f"\n         Фото чека: /photo_{record.cheque_photo}"
+    msg += f"\n         Фото чека: /photo_{record.id}"
 
     await mes.answer(msg, reply_markup=k)
 
