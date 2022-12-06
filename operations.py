@@ -94,3 +94,18 @@ def get_all_records():
         return res
     except Exception as e:
         print(e)
+
+
+def delete_record(id):
+
+    try:
+
+        res = Record(id = id)
+
+        s.delete(res)
+        s.commit()
+
+        return 'ok'
+
+    except Exception as e:
+        return 'no'

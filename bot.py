@@ -269,8 +269,85 @@ async def success_submit(mes: types.Message, state: FSMContext):
     await state.finish()
 
 
-
 @dp.message_handler(commands=['report'])
+async def report(mes: types.Message):
+    records = get_all_records()
+
+    msg = "Зарегестрированные чеки: "
+
+    for record in records:
+        msg += f"\n     Идентификатор: {record.id}"
+        msg += f"\n         Имя: {record.name}"
+        msg += f"\n         Телефон: {record.phone}"
+        msg += f"\n         Номер чека: {record.cheque_number}"
+        msg += f"\n         Фото чека: /photo_{record.cheque_photo}"
+        msg += f"\n"
+        msg += f"\n         Удалить чек: /delete_{record.id}"
+
+    msg += f"Общее количество чеков: {len(records)}"
+
+    await mes.answer(msg)
+
+
+@dp.message_handler(lambda mes: mes.text.startswith('/photo'))
+async def cheque_photo(mes: types.Message):
+
+    photo_id = mes.text.split('_')[1]
+
+    try:
+        await mes.answer_photo(photo_id)
+    except Exception as e:
+        await mes.answer_document(photo_id)
+
+
+@dp.message_handler(lambda mes: mes.text.startswith('/delete'))
+async def delete_cheque(mes: types.Message):
+
+    record_id = mes.text.split('_')[1]
+
+    await DeleteRecordState.confirm.set()
+
+    state = Dispatcher.get_current().current_state()
+
+    await state.update_data(id = record_id)
+
+    k = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    k.add(types.KeyboardButton('Нет'))
+    k.add(types.KeyboardButton('Да'))
+
+
+    msg = "Вы уверены что хотите удалить этот чек?"
+
+    record = get_record(record_id)
+
+    msg += f"\n     Идентификатор: {record.id}"
+    msg += f"\n         Имя: {record.name}"
+    msg += f"\n         Телефон: {record.phone}"
+    msg += f"\n         Номер чека: {record.cheque_number}"
+    msg += f"\n         Фото чека: /photo_{record.cheque_photo}"
+
+    await mes.answer(msg, reply_markup=k)
+
+
+@dp.message_handler(state=DeleteRecordState.confirm)
+async def delete_cheque_confirm(mes: types.Message, state: FSMContext):
+    if mes.text == 'Да':
+
+        data = await state.get_data()
+
+        delete_record(data['id'])
+
+        await mes.answer("Чек успешно удален", reply_markup=main_menu)
+
+    elif mes.text == 'Нет':
+
+        await mes.answer("Отмена", reply_markup=main_menu)
+
+    else:
+        await mes.answer("Выберите \"Да \" или \"Нет\"")
+
+
+@dp.message_handler(commands=['report_excel'])
 async def report(mes: types.Message):
     records = get_all_records()
     today = datetime.datetime.today() + datetime.timedelta(hours=6)
@@ -284,6 +361,7 @@ async def report(mes: types.Message):
 
     with open(f'{today}_report.xlsx', 'rb') as file:
         await mes.answer_document(file)
+
 
 
 def write_report(date, records, bot, mes):

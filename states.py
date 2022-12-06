@@ -7,3 +7,7 @@ class AddRecord(StatesGroup):
     cheque_photo = State()
     cheque_number = State()
     confirm = State()
+
+
+class DeleteRecordState(StatesGroup):
+    confirm = State()
