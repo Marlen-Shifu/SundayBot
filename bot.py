@@ -284,6 +284,10 @@ async def report(mes: types.Message):
         msg += f"\n"
         msg += f"\n         Удалить чек: /delete_{record.id}"
 
+        if len(msg) > 3900:
+            await mes.answer(msg)
+            msg = ""
+
     msg += f"Общее количество чеков: {len(records)}"
 
     await mes.answer(msg)
