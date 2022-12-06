@@ -317,8 +317,7 @@ async def delete_cheque(mes: types.Message):
     await state.update_data(id = record_id)
 
     k = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    k.add(types.KeyboardButton('Нет'))
-    k.add(types.KeyboardButton('Да'))
+    k.add(types.KeyboardButton('Да'), types.KeyboardButton('Нет'))
 
 
     msg = "Вы уверены что хотите удалить этот чек?"
