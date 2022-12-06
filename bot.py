@@ -277,12 +277,12 @@ async def report(mes: types.Message):
 
     for record in records:
         msg += f"\n     Идентификатор: {record.id}"
-        msg += f"\n         Имя: {record.name}"
-        msg += f"\n         Телефон: {record.phone}"
-        msg += f"\n         Номер чека: {record.cheque_number}"
-        msg += f"\n         Фото чека: /photo_{record.id}"
+        msg += f"\n             Имя: {record.name}"
+        msg += f"\n             Телефон: {record.phone}"
+        msg += f"\n             Номер чека: {record.cheque_number}"
+        msg += f"\n             Фото чека: /photo_{record.id}"
         msg += f"\n"
-        msg += f"\n         Удалить чек: /delete_{record.id}"
+        msg += f"\n             Удалить чек: /delete_{record.id}"
 
         if len(msg) > 3900:
             await mes.answer(msg)
