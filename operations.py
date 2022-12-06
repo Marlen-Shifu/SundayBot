@@ -1,4 +1,4 @@
-
+import logging
 
 from db import User, Record, db_session as s
 
@@ -108,4 +108,5 @@ def delete_record(id):
         return 'ok'
 
     except Exception as e:
+        logging.warning(e)
         return 'no'

@@ -341,9 +341,13 @@ async def delete_cheque_confirm(mes: types.Message, state: FSMContext):
 
         data = await state.get_data()
 
-        delete_record(data.get('id'))
+        res = delete_record(data.get('id'))
 
-        await mes.answer("Чек успешно удален", reply_markup=main_menu)
+        if res == 'yes':
+            await mes.answer("Чек успешно удален", reply_markup=main_menu)
+
+        else:
+            await mes.answer("Увы ошибка((( \nСообщите @Marlen45")
 
     elif mes.text == 'Нет':
 
