@@ -288,7 +288,7 @@ async def report(mes: types.Message):
             await mes.answer(msg)
             msg = ""
 
-    msg += f"Общее количество чеков: {len(records)}"
+    msg += f"\nОбщее количество чеков: {len(records)}"
 
     await mes.answer(msg)
 
