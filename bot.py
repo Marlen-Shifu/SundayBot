@@ -312,12 +312,8 @@ async def delete_cheque(mes: types.Message):
 
     await DeleteRecordState.confirm.set()
 
-    state = Dispatcher.get_current().current_state()
-
-
-    k = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    k.add(types.KeyboardButton('Да'), types.KeyboardButton('Нет'))
-
+    k = types.InlineKeyboardMarkup()
+    k.add(types.InlineKeyboardButton('Да', callback_data=f'delete_{record_id}'), types.InlineKeyboardButton('Нет', callback_data='no'))
 
     msg = "Вы уверены что хотите удалить этот чек?"
 
@@ -329,34 +325,37 @@ async def delete_cheque(mes: types.Message):
     msg += f"\n         Номер чека: {record.cheque_number}"
     msg += f"\n         Фото чека: /photo_{record.id}"
 
-    await state.update_data(record_id = record_id)
     await mes.answer(msg, reply_markup=k)
 
 
-@dp.message_handler(state=DeleteRecordState.confirm)
-async def delete_cheque_confirm(mes: types.Message, state: FSMContext):
-    if mes.text == 'Да':
+@dp.callback_query_handlers(state=DeleteRecordState.confirm)
+async def delete_cheque_confirm(call: types.CallbackQuery, state: FSMContext):
+    if call.data.startswith('delete'):
 
         await state.finish()
 
-        data = await state.get_data()
+        data = call.data.split('_')
 
-        res = delete_record(data.get('record_id'))
+        res = delete_record(data[1])
+
+        await call.answer('1')
 
         if res == 'yes':
-            await mes.answer("Чек успешно удален", reply_markup=main_menu)
+            await call.bot.send_message(call.from_user.id, "Чек успешно удален", reply_markup=main_menu)
 
         else:
-            await mes.answer("Увы ошибка((( \nСообщите @Marlen45")
+            await call.bot.send_message(call.from_user.id, "Увы ошибка((( \nСообщите @Marlen45", reply_markup=main_menu)
 
-    elif mes.text == 'Нет':
+
+    elif call.data == 'no':
 
         await state.finish()
+        await call.bot.send_message(call.from_user.id, "Отмена", reply_markup=main_menu)
 
-        await mes.answer("Отмена", reply_markup=main_menu)
 
     else:
-        await mes.answer("Выберите \"Да \" или \"Нет\"")
+        await call.bot.send_message(call.from_user.id, "Выберите \"Да \" или \"Нет\"")
+
 
 
 @dp.message_handler(commands=['report_excel'])
