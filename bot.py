@@ -280,7 +280,7 @@ async def report(mes: types.Message):
         msg += f"\n         Имя: {record.name}"
         msg += f"\n         Телефон: {record.phone}"
         msg += f"\n         Номер чека: {record.cheque_number}"
-        msg += f"\n         Фото чека: /photo_{record.cheque_photo}"
+        msg += f"\n         Фото чека: /photo_{record.id}"
         msg += f"\n"
         msg += f"\n         Удалить чек: /delete_{record.id}"
 
@@ -296,12 +296,13 @@ async def report(mes: types.Message):
 @dp.message_handler(lambda mes: mes.text.startswith('/photo'))
 async def cheque_photo(mes: types.Message):
 
-    photo_id = mes.text.split('_')[1]
+    record_id = mes.text.split('_')[1]
+    record = get_record(record_id)
 
     try:
-        await mes.answer_photo(photo_id)
+        await mes.answer_photo(record.cheque_photo)
     except Exception as e:
-        await mes.answer_document(photo_id)
+        await mes.answer_document(record.cheque_photo)
 
 
 @dp.message_handler(lambda mes: mes.text.startswith('/delete'))
