@@ -100,7 +100,7 @@ def delete_record(id):
 
     try:
 
-        res = Record(id = id)
+        res = get_record(id)
 
         s.delete(res)
         s.commit()
