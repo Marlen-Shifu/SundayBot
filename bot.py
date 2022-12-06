@@ -282,7 +282,7 @@ async def report(mes: types.Message):
         msg += f"\n             Номер чека: {record.cheque_number}"
         msg += f"\n             Фото чека: /photo_{record.id}"
         msg += f"\n"
-        msg += f"\n             Удалить чек: /delete_{record.id}"
+        msg += f"\n             Удалить чек: /delete_{record.id}\n"
 
         if len(msg) > 3900:
             await mes.answer(msg)
@@ -340,7 +340,7 @@ async def delete_cheque_confirm(call: types.CallbackQuery, state: FSMContext):
 
         await call.answer('1')
 
-        if res == 'yes':
+        if res == 'ok':
             await call.bot.send_message(call.from_user.id, "Чек успешно удален", reply_markup=main_menu)
 
         else:
