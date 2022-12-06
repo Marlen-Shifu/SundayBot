@@ -337,6 +337,8 @@ async def delete_cheque(mes: types.Message):
 async def delete_cheque_confirm(mes: types.Message, state: FSMContext):
     if mes.text == 'Да':
 
+        await state.finish()
+
         data = await state.get_data()
 
         delete_record(data['id'])
@@ -344,6 +346,8 @@ async def delete_cheque_confirm(mes: types.Message, state: FSMContext):
         await mes.answer("Чек успешно удален", reply_markup=main_menu)
 
     elif mes.text == 'Нет':
+
+        await state.finish()
 
         await mes.answer("Отмена", reply_markup=main_menu)
 
