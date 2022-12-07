@@ -33,7 +33,7 @@ class Record(Base):
     cheque_photo = Column(String(255))
     cheque_number = Column(String(255))
 
-    create_time = Column(DateTime, nullable=True)
+    # create_time = Column(DateTime, nullable=True)
 
 
 Base.metadata.create_all(engine)
