@@ -280,6 +280,7 @@ async def report(mes: types.Message):
         msg += f"\n             Имя: {record.name}"
         msg += f"\n             Телефон: {record.phone}"
         msg += f"\n             Номер чека: {record.cheque_number}"
+        msg += f"\n             Дата регистрации: {record.create_time}"
         msg += f"\n             Фото чека: /photo_{record.id}"
         msg += f"\n"
         msg += f"\n             Удалить чек: /delete_{record.id}\n"
@@ -323,6 +324,7 @@ async def delete_cheque(mes: types.Message):
     msg += f"\n         Имя: {record.name}"
     msg += f"\n         Телефон: {record.phone}"
     msg += f"\n         Номер чека: {record.cheque_number}"
+    msg += f"\n         Время: {record.create_time}"
     msg += f"\n         Фото чека: /photo_{record.id}"
 
     await mes.answer(msg, reply_markup=k)
