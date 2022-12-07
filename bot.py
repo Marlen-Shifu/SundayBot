@@ -402,7 +402,7 @@ def write_report(date, records, bot, mes):
 
         cheque_photos_urls.append(photo_url)
 
-    df = pd.DataFrame({'Имя': names, 'Телефон': phones, 'Номер чека': cheque_numbers, 'URL фото': cheque_photos_urls})
+    df = pd.DataFrame({'Имя': names, 'Телефон': phones, 'Номер чека': cheque_numbers, 'Дата регистрации': times, 'URL фото': cheque_photos_urls})
 
     df.to_excel(writer, sheet_name='Заявки', index=False)
 
