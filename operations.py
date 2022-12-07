@@ -78,7 +78,7 @@ def add_record(name, phone, cheque_photo, cheque_number):
 
     try:
 
-        time = datetime.datetime.now()
+        time = datetime.datetime.now() + datetime.timedelta(hours=6)
         logging.warning(datetime)
 
         res = Record(name = name, phone = phone, cheque_photo = cheque_photo, cheque_number = cheque_number)
