@@ -280,7 +280,7 @@ async def report(mes: types.Message):
         msg += f"\n             Имя: {record.name}"
         msg += f"\n             Телефон: {record.phone}"
         msg += f"\n             Номер чека: {record.cheque_number}"
-        # msg += f"\n             Дата регистрации: {record.create_time}"
+        msg += f"\n             Дата регистрации: {record.create_time}"
         msg += f"\n             Фото чека: /photo_{record.id}"
         msg += f"\n"
         msg += f"\n             Удалить чек: /delete_{record.id}\n"
@@ -383,12 +383,14 @@ def write_report(date, records, bot, mes):
     names = []
     phones = []
     cheque_numbers = []
+    times = []
     cheque_photos_urls = []
 
     for record in records:
         names.append(record.name)
         phones.append(record.phone)
         cheque_numbers.append(record.cheque_number)
+        times.append(record.create_time)
 
         get_url = f'https://api.telegram.org/bot{TOKEN}/getFile?file_id={record.cheque_photo}'
 
