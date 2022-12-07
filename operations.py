@@ -2,6 +2,8 @@ import logging
 
 from db import User, Record, db_session as s
 
+import datetime
+
 
 
 def get_user(id, username = None):
@@ -32,7 +34,7 @@ def add_user(user_id, username):
 
     try:
 
-        user = User(username = username, position = position, user_id = id)
+        user = User(username = username, user_id = user_id)
 
         s.add(user)
         s.commit()
@@ -75,6 +77,9 @@ def get_record(id):
 def add_record(name, phone, cheque_photo, cheque_number):
 
     try:
+
+        time = datetime.datetime.now()
+        logging.warning(datetime)
 
         res = Record(name = name, phone = phone, cheque_photo = cheque_photo, cheque_number = cheque_number)
 
