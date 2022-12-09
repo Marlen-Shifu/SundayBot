@@ -86,11 +86,11 @@ def add_record(name, phone, cheque_photo, cheque_number):
         s.add(res)
         s.commit()
 
-        return 'ok'
+        return {'res': 'ok'}
 
     except Exception as e:
         logging.error(e)
-        return 'no'
+        return {'res': 'no', 'error': e}
 
 
 def get_all_records():

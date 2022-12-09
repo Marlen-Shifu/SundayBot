@@ -236,7 +236,7 @@ async def success_submit(mes: types.Message, state: FSMContext):
 
         res = add_record(**data)
 
-        if res == 'ok':
+        if res['res'] == 'ok':
 
             link = hlink('Инстаграм', 'https://instagram.com/sundaycoffee.kz')
 
@@ -260,6 +260,9 @@ async def success_submit(mes: types.Message, state: FSMContext):
 
         else:
             await mes.answer("Извините какая-то ошибка((( Сообщите @Marlen45")
+            await mes.bot.send_message(840647074, f"Ошибка в работе бота")
+            await mes.bot.send_message(840647074, f"{datetime.datetime.now()}")
+            await mes.bot.send_message(840647074, f"{res['error']}")
 
     elif answer == 'Нет':
 
