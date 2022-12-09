@@ -422,5 +422,24 @@ def write_report(date, records, bot, mes):
 
         # await mes.answer_document(file)
 
+
+@dp.message_handler(commands=['users'])
+async def users_list(mes: types.Message):
+
+    rtn = "Список зарегестрированных пользователей:"
+
+    users = get_all_users()
+
+    cnt = 1
+    for user in users:
+        rtn += f"\n         {cnt}.{user.username} - {user.user_id}"
+        cnt += 1
+
+    rtn += "\n"
+    rtn += f"Общее количество зарегестрированных пльзователей {len(users)}"
+
+    await mes.answer(rtn)
+
+
 if __name__ == "__main__":
     executor.start_polling(dp)

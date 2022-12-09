@@ -54,11 +54,11 @@ def update_user_id(user, id):
         print(e)
 
 
-def get_all_workers():
+def get_all_users():
 
     try:
-        workers = s.query(User).all()
-        return workers
+        res = s.query(User).all()
+        return res
     except Exception as e:
         print(e)
 
