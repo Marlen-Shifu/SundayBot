@@ -234,28 +234,32 @@ async def success_submit(mes: types.Message, state: FSMContext):
 
         data = await state.get_data()
 
-        add_record(**data)
+        res = add_record(**data)
 
+        if res == 'ok':
 
-        link = hlink('Инстаграм', 'https://instagram.com/sundaycoffee.kz')
+            link = hlink('Инстаграм', 'https://instagram.com/sundaycoffee.kz')
 
-        k = types.InlineKeyboardMarkup()
-        k.add(types.InlineKeyboardButton("Подписать на Instagram Sunday Coffee", url='https://instagram.com/sundaycoffee.kz'))
+            k = types.InlineKeyboardMarkup()
+            k.add(types.InlineKeyboardButton("Подписать на Instagram Sunday Coffee", url='https://instagram.com/sundaycoffee.kz'))
 
-        await mes.answer(f"""Ваш чек успешно зарегистрирован 😍
-
+            await mes.answer(f"""Ваш чек успешно зарегистрирован 😍
+    
 Розыгрыш состоится:
 🗓️ 30 декабря
 🕖 19.00 
 в прямом эфире на нашей странице в {link}.
-
+    
 Подпишитесь на нас, чтобы узнать результаты.
-
+    
 Помните, чем больше чеков, тем больше шансов выиграть iPhone 14.
-
+    
 Желаем вам удачи!""", reply_markup=k, parse_mode="HTML")
 
-        await mes.answer("Главное меню", reply_markup=main_menu)
+            await mes.answer("Главное меню", reply_markup=main_menu)
+
+        else:
+            await mes.answer("Извините какая-то ошибка((( Сообщите @Marlen45")
 
     elif answer == 'Нет':
 

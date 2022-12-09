@@ -6,6 +6,7 @@ services:
        command: python bot.py
        depends_on:
          - database
+       restart: always
 
    database:
      image: postgres:latest
@@ -17,3 +18,4 @@ services:
        POSTGRES_DB: "db"
      ports:
      - "5432:5432"
+     restart: always

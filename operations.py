@@ -89,6 +89,7 @@ def add_record(name, phone, cheque_photo, cheque_number):
         return 'ok'
 
     except Exception as e:
+        logging.error(e)
         return 'no'
 
 
