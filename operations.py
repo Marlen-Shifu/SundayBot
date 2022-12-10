@@ -37,11 +37,13 @@ def add_user(user_id, username):
         user = User(username = username, user_id = user_id)
 
         s.add(user)
+
         s.commit()
 
         return 'ok'
 
     except Exception as e:
+        s.rollback()
         return 'no'
 
 

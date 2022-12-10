@@ -173,6 +173,7 @@ async def submit_cheque_number(mes: types.Message, state: FSMContext):
 
     await mes.answer("Номер чека выделен красным.")
 
+bot.get_session()
 
 
 @dp.message_handler(state=AddRecord.cheque_number, content_types=types.ContentTypes.all())
@@ -195,6 +196,7 @@ async def submit_cheque_photo(mes: types.Message, state: FSMContext):
 
     else:
         await mes.answer("Отправьте текстовое сообщение с номером чека.")
+
 
 
 @dp.message_handler(state=AddRecord.cheque_photo, content_types=types.ContentTypes.all())
