@@ -71,7 +71,7 @@ async def start(mes: types.Message, state: FSMContext):
 @dp.message_handler(lambda m: m.text == "Тех. поддержка")
 async def tech_support(mes: types.Message):
 
-    await mes.answer("Если у Вас есть вопросы по поводу конкурса, его правилам или других вещем связанных с конкурсом, то сообщите по номеру +7 771 742 15 00")
+    await mes.answer("Если у Вас есть вопросы по поводу конкурса, его правилам или других вещей связанных с конкурсом, то сообщите по номеру +7 771 742 15 00")
     await mes.answer("Если у Вас есть вопросы по боту, или какие-либо технические проблемы, то сообщите @Marlen45 или по номеру +7 700 686 20 81")
 
 
@@ -173,7 +173,6 @@ async def submit_cheque_number(mes: types.Message, state: FSMContext):
 
     await mes.answer("Номер чека выделен красным.")
 
-bot.get_session()
 
 
 @dp.message_handler(state=AddRecord.cheque_number, content_types=types.ContentTypes.all())
