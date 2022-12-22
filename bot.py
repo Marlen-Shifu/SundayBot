@@ -386,7 +386,6 @@ async def report(mes: types.Message):
 
 
 def write_report(date, records, bot, mes):
-    writer = pd.ExcelWriter(f'{date}_report.xlsx', engine='xlsxwriter')
 
     names = []
     phones = []
@@ -410,9 +409,11 @@ def write_report(date, records, bot, mes):
 
         cheque_photos_urls.append(photo_url)
 
-    df = pd.DataFrame({'Имя': names, 'Телефон': phones, 'Номер чека': cheque_numbers, 'Дата регистрации': times, 'URL фото': cheque_photos_urls})
+    with pd.ExcelWriter(f'{date}_report.xlsx', engine='xlsxwriter') as writer:
 
-    df.to_excel(writer, sheet_name='Заявки', index=False)
+        df = pd.DataFrame({'Имя': names, 'Телефон': phones, 'Номер чека': cheque_numbers, 'Дата регистрации': times, 'URL фото': cheque_photos_urls})
+
+        df.to_excel(writer, sheet_name='Заявки', index=False)
 
     # writer.close()
 
