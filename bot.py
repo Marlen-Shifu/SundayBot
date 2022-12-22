@@ -414,7 +414,7 @@ def write_report(date, records, bot, mes):
 
     df.to_excel(writer, sheet_name='Заявки', index=False)
 
-    writer.save()
+    # writer.close()
 
     # with open(f'{date}_report.xlsx', 'rb') as file:
     #     loop = asyncio.new_event_loop()
