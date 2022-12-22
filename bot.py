@@ -409,11 +409,11 @@ def write_report(date, records, bot, mes):
 
         cheque_photos_urls.append(photo_url)
 
-    with pd.ExcelWriter(f'{date}_report.xlsx', engine='xlsxwriter') as writer:
+    df = pd.DataFrame({'Имя': names, 'Телефон': phones, 'Номер чека': cheque_numbers, 'Дата регистрации': times, 'URL фото': cheque_photos_urls})
 
-        df = pd.DataFrame({'Имя': names, 'Телефон': phones, 'Номер чека': cheque_numbers, 'Дата регистрации': times, 'URL фото': cheque_photos_urls})
+    # with pd.ExcelWriter(f'{date}_report.xlsx', engine='xlsxwriter') as writer:
 
-        df.to_excel(writer, sheet_name='Заявки', index=False)
+    df.to_excel(f'{date}_report.xlsx', sheet_name='Заявки', index=False)
 
     # writer.close()
 
@@ -422,7 +422,7 @@ def write_report(date, records, bot, mes):
     #
     #     loop.run_until_complete(bot.send_document(mes.from_user.id, file))
 
-        # await mes.answer_document(file)
+    # await mes.answer_document(file)
 
 
 @dp.message_handler(commands=['users'])
