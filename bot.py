@@ -408,6 +408,11 @@ def write_report(date, records, bot, mes):
         photo_url = f'https://api.telegram.org/file/bot{TOKEN}/{file_path}'
 
         cheque_photos_urls.append(photo_url)
+        logging.info(f'{record.name}')
+
+    logging.info(names)
+    logging.info(phones)
+    logging.info(cheque_numbers)
 
     df = pd.DataFrame({'Имя': names, 'Телефон': phones, 'Номер чека': cheque_numbers, 'Дата регистрации': times, 'URL фото': cheque_photos_urls})
 
