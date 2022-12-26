@@ -403,7 +403,7 @@ def write_report(date, records, bot, mes):
         data = json.loads(requests.get(get_url, headers=headers).content)
         logging.info(data)
 
-        if data['ok']:
+        if data['ok'] == True:
             file_path = data['result']['file_path']
 
             photo_url = f'https://api.telegram.org/file/bot{TOKEN}/{file_path}'
