@@ -394,10 +394,6 @@ def write_report(date, records, bot, mes):
     cheque_photos_urls = []
 
     for record in records:
-        names.append(record.name)
-        phones.append(record.phone)
-        cheque_numbers.append(record.cheque_number)
-        times.append(record.create_time)
 
         logging.info(f'{record.name}')
         logging.info(f'{record.cheque_number}')
@@ -407,11 +403,20 @@ def write_report(date, records, bot, mes):
         data = json.loads(requests.get(get_url, headers=headers).content)
         logging.info(data)
 
-        file_path = data['result']['file_path']
+        if data['ok']:
+            file_path = data['result']['file_path']
 
-        photo_url = f'https://api.telegram.org/file/bot{TOKEN}/{file_path}'
+            photo_url = f'https://api.telegram.org/file/bot{TOKEN}/{file_path}'
 
-        cheque_photos_urls.append(photo_url)
+            names.append(record.name)
+            phones.append(record.phone)
+            cheque_numbers.append(record.cheque_number)
+            times.append(record.create_time)
+
+            cheque_photos_urls.append(photo_url)
+        else:
+            continue
+
 
     logging.info(names)
     logging.info(phones)
