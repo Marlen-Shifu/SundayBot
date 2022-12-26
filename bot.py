@@ -399,16 +399,19 @@ def write_report(date, records, bot, mes):
         cheque_numbers.append(record.cheque_number)
         times.append(record.create_time)
 
+        logging.info(f'{record.name}')
+        logging.info(f'{record.cheque_number}')
+
         get_url = f'https://api.telegram.org/bot{TOKEN}/getFile?file_id={record.cheque_photo}'
 
         data = json.loads(requests.get(get_url, headers=headers).content)
+        logging.info(data)
 
         file_path = data['result']['file_path']
 
         photo_url = f'https://api.telegram.org/file/bot{TOKEN}/{file_path}'
 
         cheque_photos_urls.append(photo_url)
-        logging.info(f'{record.name}')
 
     logging.info(names)
     logging.info(phones)
